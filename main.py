@@ -64,6 +64,6 @@ else:
                         st.session_state["posts"].pop(idx)
                         save_posts(st.session_state["posts"])
                         st.success("🗑️ 게시물이 삭제되었습니다.")
-                        st.experimental_rerun()
+                        st.rerun()
                     else:
                         st.error("❌ 비밀번호가 올바르지 않습니다.")
