@@ -12,9 +12,17 @@ DATA_FILE = "posts.json"
 # 게시물 불러오기
 def load_posts():
     if os.path.exists(DATA_FILE):
-        with open(DATA_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
+        try:
+            with open(DATA_FILE, "r", encoding="utf-8") as f:
+                data = f.read().strip()
+                if not data:  # 파일이 비어있으면
+                    return []
+                return json.loads(data)
+        except json.JSONDecodeError:
+            # JSON 형식이 깨졌을 경우
+            return []
     return []
+
 
 
 # 게시물 저장하기
