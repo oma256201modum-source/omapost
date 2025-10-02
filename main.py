@@ -33,7 +33,7 @@ def save_posts(posts):
 if "posts" not in st.session_state:
     st.session_state["posts"] = load_posts()
 
-st.title("*6-2반 게시판*")
+st.title("*익명 게시판*")
 
 # 게시물 작성
 st.subheader("게시물 작성")
