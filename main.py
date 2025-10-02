@@ -35,10 +35,10 @@ def save_posts(posts):
 if "posts" not in st.session_state:
     st.session_state["posts"] = load_posts()
 
-st.title("📌 Streamlit 미니 게시판 (파일 저장 버전)")
+st.title("*6-2반 게시판*")
 
 # 게시물 작성
-st.subheader("✍️ 게시물 작성")
+st.subheader("게시물 작성")
 with st.form("post_form", clear_on_submit=True):
     title = st.text_input("제목")
     content = st.text_area("내용")
