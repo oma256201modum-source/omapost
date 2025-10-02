@@ -36,6 +36,9 @@ def save_posts(posts):
 if "posts" not in st.session_state:
     st.session_state["posts"] = load_posts()
 
+# expander 상태 저장
+if "expander_states" not in st.session_state:
+    st.session_state["expander_states"] = {}
 
 st.title("*6-2반 게시판*")
 
@@ -78,8 +81,18 @@ else:
     )
 
     for idx, post in sorted_posts:
-        expander_key = f"post_{idx}"
-        with st.expander(f"📌 {post['title']} {'📍' if post.get('pinned') else ''}", expanded=True, key=expander_key):
+        # expander 상태 관리
+        exp_key = f"exp_{idx}"
+        if exp_key not in st.session_state["expander_states"]:
+            st.session_state["expander_states"][exp_key] = True
+
+        with st.expander(f"📌 {post['title']} {'📍' if post.get('pinned') else ''}",
+                         expanded=st.session_state["expander_states"][exp_key]):
+            st.session_state["expander_states"][exp_key] = st.checkbox(
+                "열림", value=st.session_state["expander_states"][exp_key],
+                key=f"chk_{idx}", help="체크하면 expander가 열립니다."
+            )
+
             st.write(post["content"])
 
             # 댓글 목록
@@ -110,7 +123,8 @@ else:
                     st.session_state["posts"].pop(idx)
                     save_posts(st.session_state["posts"])
                     st.success("🗑️ 게시물이 삭제되었습니다.")
-                    st.experimental_rerun()  # 삭제 후 expander 유지 위해 rerun
+                    # 삭제 후 expander 상태도 같이 초기화
+                    st.session_state["expander_states"].pop(exp_key, None)
                 else:
                     st.error("❌ 비밀번호가 올바르지 않습니다.")
 
@@ -123,7 +137,5 @@ else:
                     post["pinned"] = not post.get("pinned", False)
                     save_posts(st.session_state["posts"])
                     st.success("📌 고정 상태가 변경되었습니다.")
-                    # 고정/해제 후 바로 정렬 반영 위해 rerun
-                    st.experimental_rerun()
                 else:
                     st.error("❌ 비밀번호가 올바르지 않습니다.")
